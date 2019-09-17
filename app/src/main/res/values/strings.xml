@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name" translatable="false">Nonton Ah</string>
+    <string name="app_name_" translatable="false">NOAH</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_movie">Movie List</string>
+    <string name="title_tv">TV List</string>
+    <string name="settings">Setting</string>
+    <string name="detailmovie">Detail Movie</string>
+    <string name="tglrilis">Tanggal Rilis</string>
+    <string name="rating">Rating</string>
+    <string name="tanggal_tayang">Tanggal Tayang</string>
+    <string name="detail_tv">Detail TV</string>
+    <string name="add_fav_button">Tambah Favorite</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="title_activity_main2" translatable="false">Favorit</string>
+    <string name="tab_text_1" translatable="false">Tab 1</string>
+    <string name="tab_text_2" translatable="false">Tab 2</string>
+    <string name="fav" translatable="false">Favorit</string>
+</resources>

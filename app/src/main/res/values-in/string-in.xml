@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="title_movie">Daftar Film</string>
+    <string name="title_tv">Daftar TV</string>
+    <string name="settings">Pengaturan</string>
+    <string name="detailmovie">Rincian Film</string>
+    <string name="tglrilis">Tanggal Rilis</string>
+    <string name="rating">Nilai</string>
+    <string name="tanggal_tayang">Tanggal Tayang</string>
+    <string name="detail_tv">Daftar TV</string>
+
+    <string name="add_fav_button">Tambah Favorite</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="title_movie"> Movie List</string>
+    <string name="title_tv">TV List</string>
+    <string name="detailmovie">Detail Movie</string>
+    <string name="tglrilis">Release Date</string>
+    <string name="rating">Rating</string>
+    <string name="tanggal_tayang">First Air Date</string>
+    <string name="detail_tv">Detail TV</string>
+    <string name="settings">Setting</string>
+
+    <string name="add_fav_button">Add Favorite</string>
+</resources>
