@@ -221,4 +221,5 @@ public class TvModel implements Parcelable {
         dest.writeString(overview);
         dest.writeString(posterPath);
     }
+    public TvModel(){}
 }

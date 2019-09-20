@@ -3,6 +3,7 @@ package com.hariz.noah.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,20 @@ public class TvAdapter extends RecyclerView.Adapter<TvAdapter.holder> {
         this.list = tvModels;
     }
 
+    public TvAdapter(Context context) {
+        this.mContext = context;
+    }
     public void setData(List<TvModel> items) {
         list.clear();
         list.addAll(items);
         notifyDataSetChanged();
+    }
+    public List<TvModel> getListFavorite() {
+        return list;
+    }
+
+    public void setListFavorite(List<TvModel> listFavorites) {
+        this.list = listFavorites;
     }
 
     @Override

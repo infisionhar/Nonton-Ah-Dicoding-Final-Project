@@ -4,6 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static android.provider.BaseColumns._ID;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_DATE;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_JENIS;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_MOVIEID;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_POSTER_PATH;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_TITLE;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_USERRATING;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.TABLE_NAME;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -11,14 +19,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + DatabaseContract.FavColumns.TABLE_NAME + " (" +
-            DatabaseContract.FavColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
-            DatabaseContract.FavColumns.COLUMN_MOVIEID + " INTEGER, " +
-            DatabaseContract.FavColumns.COLUMN_TITLE + " TEXT NOT NULL, " +
-            DatabaseContract.FavColumns.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
-            DatabaseContract.FavColumns.COLUMN_USERRATING + " REAL NOT NULL, " +
-            DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS + " TEXT NOT NULL," +
-            DatabaseContract.FavColumns.COLUMN_DATE + " TEXT NOT NULL " +
+            COLUMN_MOVIEID + " INTEGER, " +
+            COLUMN_TITLE + " TEXT, " +
+            COLUMN_POSTER_PATH + " TEXT, " +
+            COLUMN_USERRATING + " REAL, " +
+            COLUMN_PLOT_SYNOPSIS + " TEXT," +
+            COLUMN_DATE + " TEXT, " +
+            COLUMN_JENIS + " TEXT " +
             "); ";
 
 

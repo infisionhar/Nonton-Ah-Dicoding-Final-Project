@@ -11,13 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.hariz.noah.Adapter.FavAdapter;
 import com.hariz.noah.Adapter.MovieAdapter;
-import com.hariz.noah.Model.FavModel;
 import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Network.Database.FavHelper;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

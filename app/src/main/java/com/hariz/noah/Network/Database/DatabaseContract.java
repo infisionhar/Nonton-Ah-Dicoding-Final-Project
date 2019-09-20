@@ -13,5 +13,7 @@ public class DatabaseContract {
         public static final String COLUMN_USERRATING = "userrating";
         public static final String COLUMN_PLOT_SYNOPSIS = "overview";
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_JENIS = "jenis";
+
     }
 }

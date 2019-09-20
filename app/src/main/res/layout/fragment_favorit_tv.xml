@@ -5,10 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".FavoritTvFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_tv_list_fav"
+        android:orientation="horizontal"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="match_parent"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal">
+
+    </android.support.v7.widget.RecyclerView>
+
+
 
 </FrameLayout>
