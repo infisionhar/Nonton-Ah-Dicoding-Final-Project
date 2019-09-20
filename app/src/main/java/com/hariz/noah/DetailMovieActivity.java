@@ -1,17 +1,14 @@
 package com.hariz.noah;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
-import com.hariz.noah.Model.FavModel;
 import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Network.Database.FavHelper;
 import com.hariz.noah.Network.RetrofitHelper;
@@ -54,7 +51,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         }
         setTitle(movieTitle);
         MaterialFavoriteButton materialFavoriteButtonNice =
-                (MaterialFavoriteButton) findViewById(R.id.favorite_button);
+                findViewById(R.id.favorite_button);
         materialFavoriteButtonNice.setOnFavoriteChangeListener(
                 new MaterialFavoriteButton.OnFavoriteChangeListener() {
                     @Override
@@ -64,9 +61,8 @@ public class DetailMovieActivity extends AppCompatActivity {
                             Snackbar.make(buttonView, "Added to Favorite",
                                     Snackbar.LENGTH_SHORT).show();
                         } else {
-                            int movie_id = getIntent().getExtras().getInt("id");
-                            favoriteHelper = new FavHelper(DetailMovieActivity.this);
-                            favoriteHelper.delete(movie_id);
+                            favoriteHelper.deleteFav(getIntent().getIntExtra(EXTRA_ID, 0));
+
                             SharedPreferences.Editor editor = getSharedPreferences("com.hariz.noah.DetailActivity", MODE_PRIVATE).edit();
                             editor.putBoolean("Favorite Removed", true);
                             editor.commit();
@@ -108,12 +104,17 @@ public class DetailMovieActivity extends AppCompatActivity {
     }
 
     public void savefav() {
-        FavModel favorites = new FavModel();
+        MovieModel favorites = new MovieModel();
+        favorites = new MovieModel();
+
+        Double rate = movie.getVoteAverage();
+
         favorites.setId(movie_id);
         favorites.setTitle(movieTitle);
-        favorites.setPoster(poster_);
-        favorites.setDate(release);
-        favorites.setDescription(overview);
+        favorites.setPosterPath(poster_);
+        favorites.setOverview(overview);
+        favorites.setVoteAverage(rate);
+        favorites.setReleaseDate(release);
         favoriteHelper.addFavorite(favorites);
     }
 

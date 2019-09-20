@@ -26,10 +26,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
         this.list = list;
     }
 
+    public MovieAdapter(Context context) {
+        this.mContext = context;
+    }
+
     public void setData(List<MovieModel> items) {
         list.clear();
         list.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public List<MovieModel> getListFavorite() {
+        return list;
+    }
+
+    public void setListFavorite(List<MovieModel> listFavorites) {
+        this.list = listFavorites;
     }
 
     @Override
@@ -82,6 +94,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
                     MovieModel item = list.get(i);
                     Intent intent = new Intent(mContext, DetailMovieActivity.class);
                     intent.putExtra("movies", item);
+                    intent.putExtra(DetailMovieActivity.IS_FAVORITE, 1);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }

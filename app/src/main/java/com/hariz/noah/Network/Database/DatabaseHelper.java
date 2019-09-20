@@ -12,12 +12,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + DatabaseContract.FavColumns.TABLE_NAME + " (" +
             DatabaseContract.FavColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+
             DatabaseContract.FavColumns.COLUMN_MOVIEID + " INTEGER, " +
             DatabaseContract.FavColumns.COLUMN_TITLE + " TEXT NOT NULL, " +
             DatabaseContract.FavColumns.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
+            DatabaseContract.FavColumns.COLUMN_USERRATING + " REAL NOT NULL, " +
             DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS + " TEXT NOT NULL," +
             DatabaseContract.FavColumns.COLUMN_DATE + " TEXT NOT NULL " +
             "); ";
+
 
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

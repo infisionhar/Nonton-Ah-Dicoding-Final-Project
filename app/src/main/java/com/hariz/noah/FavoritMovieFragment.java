@@ -12,11 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.hariz.noah.Adapter.FavAdapter;
+import com.hariz.noah.Adapter.MovieAdapter;
 import com.hariz.noah.Model.FavModel;
+import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Network.Database.FavHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -33,9 +36,9 @@ public class FavoritMovieFragment extends Fragment {
     Unbinder unbinder;
 
     RecyclerView recyclerView;
-    private LinkedList<FavModel> list;
+    private List<MovieModel> list;
     private FavHelper favoriteHelper;
-    private FavAdapter adapter;
+    private MovieAdapter adapter;
 
 //    private int someStateValue;
 //    private Observer<List<MovieModel>> getMovie = new Observer<List<MovieModel>>() {
@@ -73,7 +76,7 @@ public class FavoritMovieFragment extends Fragment {
         return view;
     }
 
-    private class LoadDB extends AsyncTask<Void, Void, ArrayList<FavModel>> {
+    private class LoadDB extends AsyncTask<Void, Void,List<MovieModel>> {
 
         @Override
         protected void onPreExecute() {
@@ -85,7 +88,7 @@ public class FavoritMovieFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<FavModel> favorites) {
+        protected void onPostExecute(List<MovieModel> favorites) {
             super.onPostExecute(favorites);
             list.addAll(favorites);
             adapter.setListFavorite(list);
@@ -97,7 +100,7 @@ public class FavoritMovieFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<FavModel> doInBackground(Void... voids) {
+        protected List<MovieModel> doInBackground(Void... voids) {
             return favoriteHelper.query();
         }
 
@@ -119,7 +122,7 @@ public class FavoritMovieFragment extends Fragment {
         favoriteHelper = new FavHelper(getActivity());
         favoriteHelper.open();
         list = new LinkedList<>();
-        adapter = new FavAdapter(getActivity());
+            adapter = new MovieAdapter(getActivity());
         adapter.setListFavorite(list);
         recyclerView.setAdapter(adapter);
         new LoadDB().execute();

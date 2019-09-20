@@ -7,9 +7,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.hariz.noah.Model.FavModel;
+import com.hariz.noah.Model.MovieModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.provider.BaseColumns._ID;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_DATE;
@@ -17,6 +18,8 @@ import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_POSTER_PATH;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_TITLE;
+//import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_USERRATING;
+import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_USERRATING;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.TABLE_NAME;
 
 public class FavHelper {
@@ -56,18 +59,20 @@ public class FavHelper {
     }
 
 
-    public Long addFavorite(FavModel movie) {
+    public Long addFavorite(MovieModel movie) {
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_MOVIEID, movie.getId());
         initialValues.put(COLUMN_TITLE, movie.getTitle());
-        initialValues.put(COLUMN_PLOT_SYNOPSIS, movie.getDescription());
-        initialValues.put(COLUMN_DATE, movie.getDate());
-        initialValues.put(COLUMN_POSTER_PATH, movie.getPoster());
-        return database.insert(DATABASE_TABLE, null, initialValues);
+        initialValues.put(COLUMN_POSTER_PATH, movie.getPosterPath());
+        initialValues.put(COLUMN_USERRATING, "7.4");
+        initialValues.put(COLUMN_PLOT_SYNOPSIS, movie.getOverview());
+        initialValues.put(COLUMN_DATE, movie.getReleaseDate());
 
+        return database.insert(DATABASE_TABLE, null, initialValues);
     }
 
-    public int delete(int id) {
-        return database.delete(TABLE_NAME, COLUMN_MOVIEID + " = " + id , null);
+    public int deleteFav(int id) {
+        return database.delete(TABLE_NAME, DatabaseContract.FavColumns.COLUMN_MOVIEID + " = " + id, null);
     }
 
     public Cursor queryByIdProvider(String id) {
@@ -103,36 +108,65 @@ public class FavHelper {
         return database.delete(DATABASE_TABLE, _ID + " = ?", new String[]{id});
     }
 
-    public ArrayList<FavModel> query() {
-        ArrayList<FavModel> arrayList = new ArrayList<FavModel>();
-        Cursor cursor = database.query(DATABASE_TABLE,
+    public List<MovieModel> query() {
+        String[] columns = {
+                DatabaseContract.FavColumns._ID,
+                DatabaseContract.FavColumns.COLUMN_MOVIEID,
+                DatabaseContract.FavColumns.COLUMN_TITLE,
+                COLUMN_USERRATING,
+                DatabaseContract.FavColumns.COLUMN_POSTER_PATH,
+                DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS
+
+        };
+        String sortOrder =
+                DatabaseContract.FavColumns._ID + " ASC";
+        List<MovieModel> favoriteList = new ArrayList<>();
+        Cursor cursor = database.query(DatabaseContract.FavColumns.TABLE_NAME,
+                columns,
                 null,
                 null,
                 null,
                 null,
-                null,
-                _ID + " DESC",
-                null);
+                sortOrder);
         cursor.moveToFirst();
-        FavModel note;
-        if (cursor.getCount() > 0) {
+
+//        MovieModel note;
+//        if (cursor.getCount() > 0) {
+//            do {
+//
+//                note = new  MovieModel();
+//                note.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_MOVIEID)));
+//
+//                note.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)));
+//                note.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PLOT_SYNOPSIS)));
+//                note.setReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)));
+//                note.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_POSTER_PATH)));
+//
+//                favoriteList.add(note);
+//                cursor.moveToNext();
+//
+//            } while (!cursor.isAfterLast());
+//        }
+//        cursor.close();
+//        return favoriteList;
+//    }
+        if (cursor.moveToFirst()) {
             do {
+                MovieModel movie = new MovieModel();
+                movie.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(DatabaseContract.FavColumns.COLUMN_MOVIEID))));
+                movie.setOriginalTitle(cursor.getString(cursor.getColumnIndex(DatabaseContract.FavColumns.COLUMN_TITLE)));
+//                movie.setVoteAverage(Double.parseDouble(cursor.getString(cursor.getColumnIndex(DatabaseContract.FavColumns.COLUMN_USERRATING))));
+                movie.setPosterPath(cursor.getString(cursor.getColumnIndex(DatabaseContract.FavColumns.COLUMN_POSTER_PATH)));
+                movie.setOverview(cursor.getString(cursor.getColumnIndex(DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS)));
 
-                note = new FavModel();
-                note.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
-                note.setId_item(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_MOVIEID)));
+                favoriteList.add(movie);
 
-                note.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)));
-                note.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PLOT_SYNOPSIS)));
-                note.setDate(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)));
-                note.setPoster(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_POSTER_PATH)));
-                arrayList.add(note);
-                cursor.moveToNext();
-
-            } while (!cursor.isAfterLast());
+            } while (cursor.moveToNext());
         }
         cursor.close();
-        return arrayList;
+        database.close();
+
+        return favoriteList;
     }
 
 }
