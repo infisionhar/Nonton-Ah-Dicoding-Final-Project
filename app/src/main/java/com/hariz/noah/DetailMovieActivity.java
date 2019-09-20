@@ -56,7 +56,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                 new MaterialFavoriteButton.OnFavoriteChangeListener() {
                     @Override
                     public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean f) {
-                        if (!isFavorite) {
+                        if (f) {
                             savefav();
                             Snackbar.make(buttonView, "Added to Favorite",
                                     Snackbar.LENGTH_SHORT).show();

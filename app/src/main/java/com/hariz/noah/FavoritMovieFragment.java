@@ -125,5 +125,4 @@ public class FavoritMovieFragment extends Fragment {
         new LoadDB().execute();
         super.onResume();
     }
-
 }

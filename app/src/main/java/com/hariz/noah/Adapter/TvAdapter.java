@@ -3,7 +3,6 @@ package com.hariz.noah.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +55,7 @@ public class TvAdapter extends RecyclerView.Adapter<TvAdapter.holder> {
     public void onBindViewHolder(@NonNull holder holder, int i) {
         holder.title.setText(list.get(i).getOriginalName());
         holder.overview.setText(list.get(i).getOverview());
-        String img_poster = RetrofitHelper.BASE_URL_IMAGE + list.get(i).getPosterPath();
+        String img_poster = RetrofitHelper.BASE_URL_IMAGE + "w185" +list.get(i).getPosterPath();
         Glide.with(mContext)
                 .load(img_poster)
                 .into(holder.thumbnail);

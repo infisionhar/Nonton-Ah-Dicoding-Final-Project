@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.hariz.noah.FavoritMovieFragment;
+import com.hariz.noah.FavoritTvFragment;
 import com.hariz.noah.R;
 
 /**
@@ -28,7 +30,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        switch (position) {
+            case 0: // Fragment # 0 - This will show FirstFragment
+                return FavoritMovieFragment.newInstance("Movie");
+            case 1: // Fragment # 0 - This will show FirstFragment different title
+                return FavoritTvFragment.newInstance("TV");
+            default:
+                return null;
+        }
+
     }
 
     @Nullable
