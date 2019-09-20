@@ -7,17 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.TABLE_NAME;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "dbnoteapp";
-
+    private static final String DATABASE_NAME = "dbfav";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
+    final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + DatabaseContract.FavColumns.TABLE_NAME + " (" +
             DatabaseContract.FavColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            DatabaseContract.FavColumns.iditem + " INTEGER, " +
-            DatabaseContract.FavColumns.title + " TEXT NOT NULL, " +
-            DatabaseContract.FavColumns.deskripsi + " TEXT NOT NULL, " +
-            DatabaseContract.FavColumns.date + " TEXT NOT NULL, " +
-            DatabaseContract.FavColumns.jenis + " TEXT " +
+            DatabaseContract.FavColumns.COLUMN_MOVIEID + " INTEGER, " +
+            DatabaseContract.FavColumns.COLUMN_TITLE + " TEXT NOT NULL, " +
+            DatabaseContract.FavColumns.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
+            DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS + " TEXT NOT NULL," +
+            DatabaseContract.FavColumns.COLUMN_DATE + " TEXT NOT NULL " +
             "); ";
 
     DatabaseHelper(Context context) {

@@ -50,12 +50,13 @@ public class DetailTvActivity extends AppCompatActivity {
         releasetv = tv.getFirstAirDate();
 //        setTitle(movieTitle);
 
-        String poster_title = RetrofitHelper.BASE_URL_IMAGE + covertv;
+        String poster_title = RetrofitHelper.BASE_URL_IMAGE +"w185"+ covertv;
         Glide.with(this)
                 .load(poster_title)
                 .into(imagePosterTV);
+        String poster_bg = RetrofitHelper.BASE_URL_IMAGE +"w95"+ covertv;
         Glide.with(this)
-                .load(poster_title)
+                .load(poster_bg)
                 .into(imageCoverTV);
         titleTv.setText(movieTitletv);
         overViewTV.setText(overviewtv);

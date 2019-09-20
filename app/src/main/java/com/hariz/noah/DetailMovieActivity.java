@@ -1,16 +1,17 @@
 package com.hariz.noah;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
+import com.hariz.noah.Model.FavModel;
 import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Network.Database.FavHelper;
 import com.hariz.noah.Network.RetrofitHelper;
@@ -21,17 +22,69 @@ public class DetailMovieActivity extends AppCompatActivity {
     TextView titleMovie, overView, Rating, Release, RatingTitle, ReleaseTitle;
     ImageView imageCover, imagePoster;
     String cover, poster_, movieTitle, overview, release, rating;
-    private FavHelper databaseFavoritDatabaseFavHelper;
 
-    private final AppCompatActivity activity = DetailMovieActivity.this;
+    public static String EXTRA_ID = "extra_id";
+    public static String IS_FAVORITE = "is_favorite";
+
+    private FavHelper favoriteHelper;
+    private boolean isFavorite = false;
+    private int favorite;
+
     int movie_id;
-
-    private boolean isEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_movie);
+        imageCover = findViewById(R.id.img_detail_cover);
+        imagePoster = findViewById(R.id.img_detail_poster);
+        titleMovie = findViewById(R.id.tv_detail_title);
+        overView = findViewById(R.id.tv_detail_overview);
+        Rating = findViewById(R.id.text_movie_rating);
+        Release = findViewById(R.id.text_movie_rilis);
+        RatingTitle = findViewById(R.id.text_movie_rating_title);
+        ReleaseTitle = findViewById(R.id.text_movie_rilis_title);
+
+        favoriteHelper = new FavHelper(this);
+        favoriteHelper.open();
+        favorite = getIntent().getIntExtra(IS_FAVORITE, 0);
+        if (favorite == 1) {
+            isFavorite = true;
+
+        }
+        setTitle(movieTitle);
+        MaterialFavoriteButton materialFavoriteButtonNice =
+                (MaterialFavoriteButton) findViewById(R.id.favorite_button);
+        materialFavoriteButtonNice.setOnFavoriteChangeListener(
+                new MaterialFavoriteButton.OnFavoriteChangeListener() {
+                    @Override
+                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean f) {
+                        if (!isFavorite) {
+                            savefav();
+                            Snackbar.make(buttonView, "Added to Favorite",
+                                    Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            int movie_id = getIntent().getExtras().getInt("id");
+                            favoriteHelper = new FavHelper(DetailMovieActivity.this);
+                            favoriteHelper.delete(movie_id);
+                            SharedPreferences.Editor editor = getSharedPreferences("com.hariz.noah.DetailActivity", MODE_PRIVATE).edit();
+                            editor.putBoolean("Favorite Removed", true);
+                            editor.commit();
+                            Snackbar.make(buttonView, "Removed from Favorite",
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+
+                });
+        init();
+    }
+    private void init() {
+
+        String rttitle = String.format(getResources().getString(R.string.rating));
+        RatingTitle.setText(rttitle);
+        String rtTgl = String.format(getResources().getString(R.string.tglrilis));
+        ReleaseTitle.setText(rtTgl);
+
         movie = getIntent().getParcelableExtra("movies");
         cover = movie.getBackdropPath();
         poster_ = movie.getPosterPath();
@@ -41,53 +94,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         rating = Double.toString(movie.getVoteAverage());
         release = movie.getReleaseDate();
         setTitle(movieTitle);
-        Button FavoriteButton =
-                (Button) findViewById(R.id.save_fav);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        FavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if (isEdit){
-                SharedPreferences.Editor editor = getSharedPreferences("com.hariz.noah.DetailActivity", MODE_PRIVATE).edit();
-                editor.putBoolean("Favorite Added", true);
-                editor.commit();
-                savefav();
-                Snackbar.make(v, "Added to Favorite",
-                        Snackbar.LENGTH_SHORT).show();
-//                }else{
-//                    int movie_id = getIntent().getExtras().getInt("id");
-//                    databaseFavoritDatabaseFavHelper = new FavHelper(DetailMovieActivity.this);
-//                    FavHelper.deleteFavorite(movie_id);
-//
-//                    SharedPreferences.Editor editor = getSharedPreferences("com.hariz.noah.DetailActivity", MODE_PRIVATE).edit();
-//                    editor.putBoolean("Favorite Removed", true);
-//                    editor.commit();
-//                    Snackbar.make(v, "Removed from Favorite",
-//                            Snackbar.LENGTH_SHORT).show();
-//                }
-//
-//
-            }
-        });
-
-        imageCover = findViewById(R.id.img_detail_cover);
-        imagePoster = findViewById(R.id.img_detail_poster);
-        titleMovie = findViewById(R.id.tv_detail_title);
-        overView = findViewById(R.id.tv_detail_overview);
-        Rating = findViewById(R.id.text_movie_rating);
-        Release = findViewById(R.id.text_movie_rilis);
-        RatingTitle = findViewById(R.id.text_movie_rating_title);
-        ReleaseTitle = findViewById(R.id.text_movie_rilis_title);
-        init();
-    }
-
-    private void init() {
-        String rttitle = String.format(getResources().getString(R.string.rating));
-        RatingTitle.setText(rttitle);
-        String rtTgl = String.format(getResources().getString(R.string.tglrilis));
-        ReleaseTitle.setText(rtTgl);
-
-        String poster_title = RetrofitHelper.BASE_URL_IMAGE + poster_;
+        String poster_title = RetrofitHelper.BASE_URL_IMAGE + "w185" + poster_;
         Glide.with(this)
                 .load(poster_title)
                 .into(imagePoster);
@@ -101,13 +108,13 @@ public class DetailMovieActivity extends AppCompatActivity {
     }
 
     public void savefav() {
-        databaseFavoritDatabaseFavHelper = new FavHelper(activity);
-        movie = new MovieModel();
-        movie.setId(movie_id);
-        movie.setTitle(movieTitle);
-        movie.setOverview(overview);
-        movie.setReleaseDate(release);
-        movie.setOverview(overview);
-        FavHelper.addFavorite(movie);
+        FavModel favorites = new FavModel();
+        favorites.setId(movie_id);
+        favorites.setTitle(movieTitle);
+        favorites.setPoster(poster_);
+        favorites.setDate(release);
+        favorites.setDescription(overview);
+        favoriteHelper.addFavorite(favorites);
     }
+
 }

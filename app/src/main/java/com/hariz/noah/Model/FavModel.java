@@ -6,10 +6,12 @@ import android.os.Parcelable;
 public class FavModel implements Parcelable {
     private int id;
     private int id_item;
+
     private String title;
     private String description;
     private String date;
-    private String jenis;
+    private String poster;
+
 
     public int getId() {
         return id;
@@ -51,14 +53,6 @@ public class FavModel implements Parcelable {
         this.date = date;
     }
 
-    public String getJenis() {
-        return jenis;
-    }
-
-    public void setJenis(String jenis) {
-        this.jenis = jenis;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -71,7 +65,7 @@ public class FavModel implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.description);
         dest.writeString(this.date);
-        dest.writeString(this.jenis);
+        dest.writeString(this.poster);
     }
     public FavModel(){}
     private  FavModel(Parcel in){
@@ -80,9 +74,10 @@ public class FavModel implements Parcelable {
         this.title = in.readString();
         this.description = in.readString();
         this.date = in.readString();
-        this.jenis = in.readString();
+        this.poster = in.readString();
     }
-    public static final Parcelable.Creator<FavModel> CREATOR = new Parcelable.Creator<FavModel>() {
+
+    private static final Parcelable.Creator<FavModel> CREATOR = new Parcelable.Creator<FavModel>() {
         @Override
         public FavModel createFromParcel(Parcel source) {
             return new FavModel(source);
@@ -93,4 +88,12 @@ public class FavModel implements Parcelable {
             return new FavModel[size];
         }
     };
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 }

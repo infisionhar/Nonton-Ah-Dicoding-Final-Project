@@ -9,5 +9,6 @@
     <string name="tanggal_tayang">Tanggal Tayang</string>
     <string name="detail_tv">Daftar TV</string>
 
+    <string name="release_date">Tanggal Rilis</string>
     <string name="add_fav_button">Tambah Favorite</string>
 </resources>

@@ -67,9 +67,9 @@ public class FavoritActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return MovieListFragment.newInstance("Movie");
+                    return FavoritMovieFragment.newInstance("Movie");
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return TvListFragment.newInstance("TV");
+                    return FavoritTvFragment.newInstance("TV");
                 default:
                     return null;
             }

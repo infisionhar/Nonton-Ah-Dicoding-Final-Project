@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:id="@+id/img_movie_poster_fav"
+            android:layout_marginBottom="4dp"
+            tools:src="@color/colorAccent"/>
+        <TextView
+            android:layout_below="@+id/img_movie_poster_fav"
+            android:id="@+id/tv_movie_title_fav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Title"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"/>
+        <TextView
+            android:layout_below="@id/tv_movie_title_fav"
+            android:id="@+id/tv_movie_sinopsis_fav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Sinopsis"
+            android:maxLines="2"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"/>
+
+        <TextView
+            android:id="@+id/tv_movie_date_fav"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_movie_Tdate_fav"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="8dp"
+            android:maxLines="2"
+            tools:text="release date" />
+        <TextView
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_below="@id/tv_movie_sinopsis_fav"
+            android:id="@+id/tv_movie_Tdate_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/release_date"
+            android:maxLines="2"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

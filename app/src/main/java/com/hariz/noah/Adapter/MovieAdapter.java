@@ -47,7 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
 //        viewHolder.release.setText(list.get(i).getReleaseDate());
 //        viewHolder.rating.setText(list.get(i).getVoteCount());
 //
-        String img_poster = RetrofitHelper.BASE_URL_IMAGE + list.get(i).getPosterPath();
+        String img_poster = RetrofitHelper.BASE_URL_IMAGE + "w185"+ list.get(i).getPosterPath();
         Glide.with(mContext)
                 .load(img_poster)
                 .into(viewHolder.thumbnail);

@@ -68,10 +68,10 @@
         app:layout_constraintTop_toBottomOf="@+id/text_movie_rilis"
         tools:text="7.1" />
 
-    <Button
-        android:id="@+id/save_fav"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
+    <com.github.ivbaranov.mfb.MaterialFavoriteButton
+        android:id="@+id/favorite_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="32dp"

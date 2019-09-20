@@ -4,9 +4,13 @@ package com.hariz.noah.Fragment;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +24,7 @@ import com.hariz.noah.BuildConfig;
 import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Model.MovieViewModel;
 import com.hariz.noah.Model.Response.MovieResponse;
+import com.hariz.noah.Network.Database.FavHelper;
 import com.hariz.noah.Network.RetrofitHelper;
 import com.hariz.noah.R;
 
@@ -66,6 +71,7 @@ public class MovieListFragment extends Fragment {
         MovieListFragment fragment = new MovieListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -96,6 +102,7 @@ public class MovieListFragment extends Fragment {
         }
         mainViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         mainViewModel.getListMovie().observe(this, getMovie);
+//        checkSortOrder();
         return view;
     }
 
