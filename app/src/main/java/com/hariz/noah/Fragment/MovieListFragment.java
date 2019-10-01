@@ -6,11 +6,15 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -36,7 +40,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieListFragment extends Fragment {
+public class MovieListFragment extends Fragment implements SearchView.OnQueryTextListener {
     private final String SOME_VALUE_KEY = "someValueToSave";
     private final String MOVIE_LIST_KEY = "movieListKey";
     LinearLayoutManager manager;
@@ -57,7 +61,7 @@ public class MovieListFragment extends Fragment {
 
     };
 
-
+    SearchView searchView;
     public MovieListFragment() {
         // Required empty public constructor
     }
@@ -77,13 +81,10 @@ public class MovieListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        list = new ArrayList<>();
-        recyclerView = view.findViewById(R.id.rv_movie_list);
-        manager = new LinearLayoutManager(getContext());
+        searchView = (SearchView) view.findViewById(R.id.search);
+        searchView.setOnQueryTextListener(this);
 
-        adapter = new MovieAdapter(getContext(), list);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
+        init();
         if (savedInstanceState != null) {
             someStateValue = savedInstanceState.getInt(SOME_VALUE_KEY);
             list = savedInstanceState.getParcelableArrayList(MOVIE_LIST_KEY);
@@ -91,13 +92,14 @@ public class MovieListFragment extends Fragment {
                 adapter.setData(list);
             } else {
                 loadData();
+                init();
             }
         } else {
             loadData();
+            init();
         }
         mainViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         mainViewModel.getListMovie().observe(this, getMovie);
-//        checkSortOrder();
         return view;
     }
 
@@ -107,6 +109,131 @@ public class MovieListFragment extends Fragment {
         outState.putParcelableArrayList(MOVIE_LIST_KEY, (ArrayList<? extends Parcelable>) list);
         super.onSaveInstanceState(outState);
     }
+private void init(){
+
+    list = new ArrayList<>();
+    recyclerView = (RecyclerView) recyclerView.findViewById(R.id.rv_movie_list);
+    manager = new LinearLayoutManager(getContext());
+    adapter = new MovieAdapter(getContext(), list);
+    recyclerView.setLayoutManager(manager);
+    recyclerView.setAdapter(adapter);
+}
+    private void loadsearch() {
+        String cari_movie = searchView.getQuery().toString();
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage("Loading....");
+        dialog.setCancelable(false);
+        dialog.show();
+
+//
+//        list = new ArrayList<>();
+//        recyclerView = view.findViewById(R.id.rv_movie_list);
+//        manager = new LinearLayoutManager(getContext());
+
+        RetrofitHelper.getService().getItemSearch(cari_movie)
+                .enqueue(new Callback<MovieResponse>() {
+                    @Override
+                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                        if (response.body() != null) {
+                            for (MovieModel r : response.body().getResults()) {
+                                list.add(r);
+                                Log.d("", "onResponse: " + r);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<MovieResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Movie Tidak ada", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+
+    }
+
+
+        //        final RecyclerView recyclerViewS = getActivity().findViewById(R.id.rv_movie_list);
+//        recyclerViewS.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        RetrofitHelper.getService().getItemSearch(cari_movie)
+//                .enqueue(new Callback<MovieResponse>() {
+//                    @Override
+//                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+//                        if (response.body() != null) {
+//                            for (MovieModel r : response.body().getResults()) {
+//                                list.add(r);
+//                                Log.d("", "onResponse: " + r);
+//
+//                            }
+//                        }
+//                        adapter.setData(list);
+//                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+//                        recyclerViewS.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//                            GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
+//                                @Override
+//                                public boolean onDown(MotionEvent e) {
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public void onShowPress(MotionEvent e) {
+//
+//                                }
+//
+//                                @Override
+//                                public boolean onSingleTapUp(MotionEvent e) {
+//                                    return true;
+//                                }
+//
+//                                @Override
+//                                public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public void onLongPress(MotionEvent e) {
+//
+//                                }
+//
+//                                @Override
+//                                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//                                    return false;
+//                                }
+//
+//                            });
+//
+//                            @Override
+//                            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent motionEvent) {
+//                                View child = rv.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+//                                if (child != null && gestureDetector.onTouchEvent(motionEvent)) {
+//                                    int position = rv.getChildAdapterPosition(child);
+////                                    Intent i = new Intent(getContext(), DetailActivity.class);
+//                                }
+//                                return false;
+//                            }
+//
+//                            @Override
+//                            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onRequestDisallowInterceptTouchEvent(boolean b) {
+//
+//                            }
+//                        });
+//
+//                        dialog.dismiss();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<MovieResponse> call, Throwable t) {
+//                        Toast.makeText(getContext(), "Gagal Memuat Data", Toast.LENGTH_SHORT).show();
+//                        dialog.dismiss();
+//                    }
+//                });
 
     private void loadData() {
         dialog = new ProgressDialog(getContext());
@@ -131,10 +258,22 @@ public class MovieListFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<MovieResponse> call, Throwable t) {
-                        Toast.makeText(getContext(), "Gagal Memuat Data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Movie Tidak ada", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        loadsearch();
+        init();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
 }
