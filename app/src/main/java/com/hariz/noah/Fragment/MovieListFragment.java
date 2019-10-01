@@ -6,15 +6,12 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -62,6 +59,7 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
     };
 
     SearchView searchView;
+
     public MovieListFragment() {
         // Required empty public constructor
     }
@@ -109,15 +107,17 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
         outState.putParcelableArrayList(MOVIE_LIST_KEY, (ArrayList<? extends Parcelable>) list);
         super.onSaveInstanceState(outState);
     }
-private void init(){
 
-    list = new ArrayList<>();
-    recyclerView = (RecyclerView) recyclerView.findViewById(R.id.rv_movie_list);
-    manager = new LinearLayoutManager(getContext());
-    adapter = new MovieAdapter(getContext(), list);
-    recyclerView.setLayoutManager(manager);
-    recyclerView.setAdapter(adapter);
-}
+    private void init() {
+
+        list = new ArrayList<>();
+        recyclerView = (RecyclerView) recyclerView.findViewById(R.id.rv_movie_list);
+        manager = new LinearLayoutManager(getContext());
+        adapter = new MovieAdapter(getContext(), list);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+    }
+
     private void loadsearch() {
         String cari_movie = searchView.getQuery().toString();
         dialog = new ProgressDialog(getContext());
@@ -154,86 +154,6 @@ private void init(){
 
     }
 
-
-        //        final RecyclerView recyclerViewS = getActivity().findViewById(R.id.rv_movie_list);
-//        recyclerViewS.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        RetrofitHelper.getService().getItemSearch(cari_movie)
-//                .enqueue(new Callback<MovieResponse>() {
-//                    @Override
-//                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-//                        if (response.body() != null) {
-//                            for (MovieModel r : response.body().getResults()) {
-//                                list.add(r);
-//                                Log.d("", "onResponse: " + r);
-//
-//                            }
-//                        }
-//                        adapter.setData(list);
-//                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
-//                        recyclerViewS.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//                            GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
-//                                @Override
-//                                public boolean onDown(MotionEvent e) {
-//                                    return false;
-//                                }
-//
-//                                @Override
-//                                public void onShowPress(MotionEvent e) {
-//
-//                                }
-//
-//                                @Override
-//                                public boolean onSingleTapUp(MotionEvent e) {
-//                                    return true;
-//                                }
-//
-//                                @Override
-//                                public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//                                    return false;
-//                                }
-//
-//                                @Override
-//                                public void onLongPress(MotionEvent e) {
-//
-//                                }
-//
-//                                @Override
-//                                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                                    return false;
-//                                }
-//
-//                            });
-//
-//                            @Override
-//                            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent motionEvent) {
-//                                View child = rv.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-//                                if (child != null && gestureDetector.onTouchEvent(motionEvent)) {
-//                                    int position = rv.getChildAdapterPosition(child);
-////                                    Intent i = new Intent(getContext(), DetailActivity.class);
-//                                }
-//                                return false;
-//                            }
-//
-//                            @Override
-//                            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onRequestDisallowInterceptTouchEvent(boolean b) {
-//
-//                            }
-//                        });
-//
-//                        dialog.dismiss();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<MovieResponse> call, Throwable t) {
-//                        Toast.makeText(getContext(), "Gagal Memuat Data", Toast.LENGTH_SHORT).show();
-//                        dialog.dismiss();
-//                    }
-//                });
 
     private void loadData() {
         dialog = new ProgressDialog(getContext());

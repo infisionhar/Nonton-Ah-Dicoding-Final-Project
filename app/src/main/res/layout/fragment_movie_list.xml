@@ -3,16 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     tools:context=".Fragment.MovieListFragment">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_movie_list"
-        android:orientation="horizontal"
-        android:layout_height="match_parent"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="horizontal">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/middle_margin"
+        android:paddingRight="@dimen/middle_margin"
+        android:paddingTop="@dimen/middle_margin">
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search here"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_list"
+            android:layout_below="@id/search"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="horizontal">
+        </android.support.v7.widget.RecyclerView>
 
-    </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
 
 </FrameLayout>

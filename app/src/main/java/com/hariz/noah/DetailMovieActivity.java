@@ -1,11 +1,11 @@
 package com.hariz.noah;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
@@ -20,12 +20,13 @@ public class DetailMovieActivity extends AppCompatActivity {
     ImageView imageCover, imagePoster;
     String cover, poster_, movieTitle, overview, release, rating;
 
-    public static String EXTRA_ID = "extra_id";
     public static String IS_FAVORITE = "is_favorite";
 
+
     private FavHelper favoriteHelper;
-    private boolean isFavorite = false;
     private int favorite;
+
+    private boolean isFavorite = false;
 
     int movie_id;
 
@@ -42,38 +43,36 @@ public class DetailMovieActivity extends AppCompatActivity {
         RatingTitle = findViewById(R.id.text_movie_rating_title);
         ReleaseTitle = findViewById(R.id.text_movie_rilis_title);
 
+        setTitle(movieTitle);
         favoriteHelper = new FavHelper(this);
         favoriteHelper.open();
         favorite = getIntent().getIntExtra(IS_FAVORITE, 0);
-        if (favorite == 1) {
-            isFavorite = true;
-
-        }
         setTitle(movieTitle);
-        MaterialFavoriteButton materialFavoriteButtonNice =
-                findViewById(R.id.favorite_button);
-        materialFavoriteButtonNice.setOnFavoriteChangeListener(
-                new MaterialFavoriteButton.OnFavoriteChangeListener() {
-                    @Override
-                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean f) {
-                        if (f) {
-                            savefav();
-                            Snackbar.make(buttonView, "Added to Favorite",
-                                    Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            favoriteHelper.deleteFav(getIntent().getIntExtra(EXTRA_ID, 0));
-
-                            SharedPreferences.Editor editor = getSharedPreferences("com.hariz.noah.DetailActivity", MODE_PRIVATE).edit();
-                            editor.putBoolean("Favorite Removed", true);
-                            editor.commit();
-                            Snackbar.make(buttonView, "Removed from Favorite",
-                                    Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-
-                });
+        final MaterialFavoriteButton materialFavoriteButtonNice = findViewById(R.id.favorite_button);
+        materialFavoriteButtonNice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFavorite) {
+                    savefav();
+                    Toast.makeText(DetailMovieActivity.this, "Add Fav", Toast.LENGTH_SHORT).show();
+                    isFavorite = true;
+                    materialFavoriteButtonNice.setFavorite(isFavorite, true);
+                } else {
+                    favoriteHelper.deleteFav(movie.getId());
+                    Toast.makeText(DetailMovieActivity.this, "Delete From Fav", Toast.LENGTH_SHORT).show();
+                    isFavorite = false;
+                    materialFavoriteButtonNice.setFavorite(isFavorite, true);
+                }
+            }
+        });
         init();
+        MovieModel model = favoriteHelper.checkDataExists(String.valueOf(movie.getId()));
+        if (model != null && model.getId() != null) {
+            isFavorite = true;
+            materialFavoriteButtonNice.setFavorite(isFavorite, true);
+        }
     }
+
     private void init() {
 
         String rttitle = String.format(getResources().getString(R.string.rating));
@@ -104,17 +103,16 @@ public class DetailMovieActivity extends AppCompatActivity {
     }
 
     public void savefav() {
+        favoriteHelper.open();
         MovieModel favorites = new MovieModel();
-        favorites = new MovieModel();
-
-        Double rate = movie.getVoteAverage();
-
-        favorites.setId(movie_id);
-        favorites.setTitle(movieTitle);
-        favorites.setPosterPath(poster_);
-        favorites.setOverview(overview);
+        MovieModel movieModel = getIntent().getParcelableExtra("movies");
+        Double rate = movieModel.getVoteAverage();
+        favorites.setId(movieModel.getId());
+        favorites.setTitle(movieModel.getTitle());
+        favorites.setPosterPath(movieModel.getPosterPath());
+        favorites.setOverview(movieModel.getOverview());
         favorites.setVoteAverage(rate);
-        favorites.setReleaseDate(release);
+        favorites.setReleaseDate(movieModel.getReleaseDate());
         favoriteHelper.addFavorite(favorites);
     }
 

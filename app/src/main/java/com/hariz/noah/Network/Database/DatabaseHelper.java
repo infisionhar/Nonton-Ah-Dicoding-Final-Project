@@ -16,7 +16,7 @@ import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.TABLE_
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dbfav";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + DatabaseContract.FavColumns.TABLE_NAME + " (" +
             _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME + "'");
         onCreate(db);
     }
 }

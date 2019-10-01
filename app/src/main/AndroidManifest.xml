@@ -3,6 +3,8 @@
     package="com.hariz.noah">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.hariz.noah.READ_DATABASE" />
+    <uses-permission android:name="com.hariz.noah.WRITE_DATABASE" />
 
     <application
         android:allowBackup="true"
@@ -12,10 +14,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <receiver android:name=".FavWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/fav_widget_info" />
+        </receiver>
+        <service
+            android:name="com.hariz.noah.StackWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
         <activity
             android:name=".FavoritActivity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DetailTvActivity" />
         <activity android:name=".DetailMovieActivity" />
         <activity android:name=".MainActivity">

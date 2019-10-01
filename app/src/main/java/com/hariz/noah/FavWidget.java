@@ -3,23 +3,32 @@ package com.hariz.noah;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class FavWidget extends AppWidgetProvider {
+    public static final String TOAST_ACTION = "com.hariz.noah.TOAST_ACTION";
+    public static final String EXTRA_ITEM = "com.hariz.noah.EXTRA_ITEM";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
+        Intent intent = new Intent(context, StackWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.fav_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setRemoteAdapter(R.id.stack_view, intent);
+        views.setEmptyView(R.id.stack_view, R.id.empty_view);
+
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
     }
 
     @Override

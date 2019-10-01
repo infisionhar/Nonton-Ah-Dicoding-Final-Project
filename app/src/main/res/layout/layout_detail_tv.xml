@@ -68,25 +68,24 @@
         app:layout_constraintTop_toBottomOf="@+id/text_tv_rilis"
         tools:text="7.1" />
 
-    <Button
-        android:id="@+id/save_fav_tv"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
+    <com.github.ivbaranov.mfb.MaterialFavoriteButton
+        android:id="@+id/favorite_button_tv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:background="@color/colorPrimaryDark"
-        android:drawableStart="@drawable/ic_favorite_border_orange_12dp"
-        android:drawableLeft="@drawable/ic_favorite_border_orange_12dp"
         android:text="@string/add_fav_button"
-        android:textColor="@color/textColor"
-        android:textSize="12sp"
+        android:textSize="9sp"
+        android:textColor ="@color/textColor"
+        android:drawableLeft = "@drawable/ic_favorite_border_orange_12dp"
+        android:background = "@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_tv_rating" />
+        app:layout_constraintTop_toBottomOf="@+id/text_tv_rating"
+        android:drawableStart="@drawable/ic_favorite_border_orange_12dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

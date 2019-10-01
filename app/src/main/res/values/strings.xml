@@ -21,4 +21,6 @@
     <string name="tab_text_2" translatable="false">Tab 2</string>
     <string name="fav" translatable="false">Favorit</string>
     <string name="release_date">Release Date</string>
+    <string name="appwidget_text" translatable="false">EXAMPLE</string>
+    <string name="add_widget" translatable="false">Add widget</string>
 </resources>

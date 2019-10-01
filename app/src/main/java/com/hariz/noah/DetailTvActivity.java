@@ -1,13 +1,19 @@
 package com.hariz.noah;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.hariz.noah.Model.TvModel;
+import com.hariz.noah.Network.Database.FavHelper;
 import com.hariz.noah.Network.RetrofitHelper;
+
 
 public class DetailTvActivity extends AppCompatActivity {
     TvModel tv;
@@ -15,6 +21,9 @@ public class DetailTvActivity extends AppCompatActivity {
     ImageView imageCoverTV, imagePosterTV;
     String covertv, poster_tv, movieTitletv, overviewtv, releasetv, ratingtv;
     int tv_id;
+
+    boolean fav = false;
+    private FavHelper favoriteHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +38,48 @@ public class DetailTvActivity extends AppCompatActivity {
         ReleaseTV = findViewById(R.id.text_tv_rilis);
         RatingTitleTV = findViewById(R.id.text_tv_rating_title);
         ReleaseTitleTV = findViewById(R.id.text_tv_rilis_title);
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        MaterialFavoriteButton materialFavoriteButtonNice =
+                findViewById(R.id.favorite_button_tv);
+        materialFavoriteButtonNice.setOnFavoriteChangeListener(
+                new MaterialFavoriteButton.OnFavoriteChangeListener() {
+                    @Override
+                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean f) {
+                        if (!fav) {
+                            savefav();
+                            Toast.makeText(DetailTvActivity.this, "add to fav", Toast.LENGTH_SHORT).show();
+                            fav = true;
+                        } else {
+                            favoriteHelper.deleteFav(tv.getId());
+                            Toast.makeText(DetailTvActivity.this, "delete from fav", Toast.LENGTH_SHORT).show();
+                            fav = false;
+                        }
+                    }
+                });
+        favoriteHelper = new FavHelper(this);
         init();
+
+        TvModel tvm = favoriteHelper.checkDataExistsTV(String.valueOf(tv.getId()));
+        if (tvm !=
+                null && tvm.getId() != null) {
+            fav = true;
+        }
+    }
+
+    private void savefav() {
+        favoriteHelper.open();
+        TvModel tvModel = new TvModel();
+        TvModel tv = getIntent().getParcelableExtra("TV");
+        tvModel.setId(tv.getId());
+        tvModel.setOriginalName(tv.getOriginalName());
+        tvModel.setPosterPath(tv.getPosterPath());
+        tvModel.setVoteAverage(tv.getVoteAverage());
+        tvModel.setOverview(tv.getOverview());
+        tvModel.setFirstAirDate(tv.getFirstAirDate());
+        favoriteHelper.addFavoriteTV(tvModel);
     }
 
     private void init() {
@@ -50,11 +100,11 @@ public class DetailTvActivity extends AppCompatActivity {
         releasetv = tv.getFirstAirDate();
 //        setTitle(movieTitle);
 
-        String poster_title = RetrofitHelper.BASE_URL_IMAGE +"w185"+ covertv;
+        String poster_title = RetrofitHelper.BASE_URL_IMAGE + "w185" + covertv;
         Glide.with(this)
                 .load(poster_title)
                 .into(imagePosterTV);
-        String poster_bg = RetrofitHelper.BASE_URL_IMAGE +"w185"+ covertv;
+        String poster_bg = RetrofitHelper.BASE_URL_IMAGE + "w185" + covertv;
         Glide.with(this)
                 .load(poster_bg)
                 .into(imageCoverTV);

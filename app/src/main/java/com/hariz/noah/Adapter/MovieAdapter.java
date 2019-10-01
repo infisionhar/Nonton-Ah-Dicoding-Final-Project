@@ -26,16 +26,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
         this.list = list;
     }
 
-    public MovieAdapter(Context context) {
-        this.mContext = context;
-    }
 
     public void setData(List<MovieModel> items) {
-        list.clear();
         list.addAll(items);
         notifyDataSetChanged();
     }
-
+    public void replaceAll(List<MovieModel> items) {
+        list.clear();
+        list = items;
+        notifyDataSetChanged();
+    }
     public List<MovieModel> getListFavorite() {
         return list;
     }
@@ -76,7 +76,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
 
     public class holder extends RecyclerView.ViewHolder {
 
-
         public TextView title, overview, rating, release;
         public ImageView thumbnail;
 
@@ -85,8 +84,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
             title = view.findViewById(R.id.tv_movie_title);
             overview = view.findViewById(R.id.tv_movie_sinopsis);
             thumbnail = view.findViewById(R.id.img_movie_poster);
-//            rating = (TextView) view.findViewById(R.id.text_movie_rating);
-//            release = (TextView) view.findViewById(R.id.text_movie_rilis);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -94,7 +91,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
                     MovieModel item = list.get(i);
                     Intent intent = new Intent(mContext, DetailMovieActivity.class);
                     intent.putExtra("movies", item);
-                    intent.putExtra(DetailMovieActivity.IS_FAVORITE, 1);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }

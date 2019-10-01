@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,38 +16,26 @@ import com.hariz.noah.Adapter.MovieAdapter;
 import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Network.Database.FavHelper;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavoritMovieFragment extends Fragment {
-    //    private final String SOME_VALUE_KEY = "someValueToSave";
-//    private final String MOVIE_LIST_KEY = "movieListKey";
-//    LinearLayoutManager manager;
-//    ProgressDialog dialog;
+
     Unbinder unbinder;
 
     RecyclerView recyclerView;
     private List<MovieModel> list;
     private FavHelper favoriteHelper;
     private MovieAdapter adapter;
-
-//    private int someStateValue;
-//    private Observer<List<MovieModel>> getMovie = new Observer<List<MovieModel>>() {
-//        @Override
-//        public void onChanged(List<MovieModel> weatherItems) {
-//            if (weatherItems != null) {
-//                adapter.setData(weatherItems);
-//            }
-//        }
-//
-//    };
 
     public FavoritMovieFragment() {
         // Required empty public constructor
@@ -73,6 +62,37 @@ public class FavoritMovieFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+//        list = new ArrayList<>();
+//        adapter = new MovieAdapter(getActivity(), list);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setAdapter(adapter);
+//        adapter.notifyDataSetChanged();
+//        favoriteHelper = new FavHelper(getActivity());
+//        favoriteHelper.open();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
+        favoriteHelper = new FavHelper(getActivity());
+        favoriteHelper.open();
+        list = new ArrayList<>();
+        adapter = new MovieAdapter(getActivity(), list);
+        adapter.setListFavorite(list);
+        recyclerView.setAdapter(adapter);
+        Log.e(TAG, "huwi " + list.size() + "");
+        new LoadDB().execute();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (favoriteHelper != null) {
+            favoriteHelper.close();
+        }
+    }
+
     private class LoadDB extends AsyncTask<Void, Void,List<MovieModel>> {
 
         @Override
@@ -91,6 +111,7 @@ public class FavoritMovieFragment extends Fragment {
             adapter.setListFavorite(list);
             adapter.notifyDataSetChanged();
 
+            Log.e(TAG, "huwi " + list.size() + "");
             if (list.size() == 0) {
                 Toast.makeText(getActivity(), "tidak ada data", Toast.LENGTH_SHORT).show();
             }
@@ -102,27 +123,5 @@ public class FavoritMovieFragment extends Fragment {
         }
 
 
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (favoriteHelper != null) {
-            favoriteHelper.close();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(true);
-        favoriteHelper = new FavHelper(getActivity());
-        favoriteHelper.open();
-        list = new LinkedList<>();
-            adapter = new MovieAdapter(getActivity());
-        adapter.setListFavorite(list);
-        recyclerView.setAdapter(adapter);
-        new LoadDB().execute();
-        super.onResume();
     }
 }

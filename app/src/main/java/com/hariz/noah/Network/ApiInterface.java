@@ -1,5 +1,6 @@
 package com.hariz.noah.Network;
 
+import com.hariz.noah.BuildConfig;
 import com.hariz.noah.Model.Response.MovieResponse;
 import com.hariz.noah.Model.Response.TvResponse;
 
@@ -12,6 +13,10 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @GET("3/movie/popular")
     Call<MovieResponse> getMovie(@Query("api_key") String apiKey);
+
+    @Headers("Accept: application/json")
+    @GET("3/search/movie?api_key="+ BuildConfig.THE_MOVIE_API_TOKEN )
+    Call<MovieResponse> getItemSearch(@Query("query") String movie_name);
 
     @Headers("Accept: application/json")
     @GET("3/tv/popular")

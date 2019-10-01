@@ -15,7 +15,7 @@ import com.hariz.noah.Adapter.TvAdapter;
 import com.hariz.noah.Model.TvModel;
 import com.hariz.noah.Network.Database.FavHelper;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -101,7 +101,7 @@ public class FavoritTvFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         favoriteHelper = new FavHelper(getActivity());
         favoriteHelper.open();
-        list = new LinkedList<>();
+        list = new ArrayList<>();
         adapter = new TvAdapter(getActivity());
         adapter.setListFavorite(list);
         recyclerView.setAdapter(adapter);

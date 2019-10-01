@@ -85,10 +85,91 @@ public class FavHelper {
 
         return database.insert(DATABASE_TABLE, null, initialValues);
     }
+
     public int deleteFav(int id) {
-        return database.delete(DATABASE_TABLE, COLUMN_MOVIEID + " = " + id, null);
+        String[] whereArgs = new String[]{String.valueOf(id)};
+        return database.delete(DATABASE_TABLE, COLUMN_MOVIEID + " = ?", whereArgs);
     }
 
+    public MovieModel checkDataExists(String id) {
+        String whereClause = "movieid = ?";
+        String[] whereArgs = new String[]{id};
+        String[] columns = {
+                _ID,
+                COLUMN_MOVIEID,
+                COLUMN_TITLE,
+                COLUMN_USERRATING,
+                COLUMN_POSTER_PATH,
+                COLUMN_PLOT_SYNOPSIS,
+                COLUMN_JENIS
+
+        };
+        Cursor cursor = database.query(TABLE_NAME,
+                columns,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+
+        MovieModel movie = new MovieModel();
+
+        if (cursor.moveToFirst()) {
+            do {
+                movie.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MOVIEID))));
+                movie.setOriginalTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
+                movie.setVoteAverage(Double.parseDouble(cursor.getString(cursor.getColumnIndex(COLUMN_USERRATING))));
+                movie.setPosterPath(cursor.getString(cursor.getColumnIndex(COLUMN_POSTER_PATH)));
+                movie.setOverview(cursor.getString(cursor.getColumnIndex(COLUMN_PLOT_SYNOPSIS)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return movie;
+    }
+
+    public TvModel checkDataExistsTV(String id) {
+        String whereClause = "movieid = ?";
+        String[] whereArgs = new String[]{id};
+        String[] columns = {
+                _ID,
+                COLUMN_MOVIEID,
+                COLUMN_TITLE,
+                COLUMN_USERRATING,
+                COLUMN_POSTER_PATH,
+                COLUMN_PLOT_SYNOPSIS,
+                COLUMN_JENIS
+
+        };
+        if (!database.isOpen())
+            open();
+        Cursor cursor = database.query(TABLE_NAME,
+                columns,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+
+        TvModel movie = new TvModel();
+
+        if (cursor.moveToFirst()) {
+            do {
+                movie.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MOVIEID))));
+                movie.setOriginalName(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
+                movie.setVoteAverage(Double.parseDouble(cursor.getString(cursor.getColumnIndex(COLUMN_USERRATING))));
+                movie.setPosterPath(cursor.getString(cursor.getColumnIndex(COLUMN_POSTER_PATH)));
+                movie.setOverview(cursor.getString(cursor.getColumnIndex(COLUMN_PLOT_SYNOPSIS)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return movie;
+    }
 
     public List<MovieModel> query() {
         String[] columns = {
@@ -97,16 +178,20 @@ public class FavHelper {
                 COLUMN_TITLE,
                 COLUMN_USERRATING,
                 COLUMN_POSTER_PATH,
-                COLUMN_PLOT_SYNOPSIS
+                COLUMN_PLOT_SYNOPSIS,
+                COLUMN_JENIS
 
         };
         String sortOrder =
                 _ID + " ASC";
         List<MovieModel> favoriteList = new ArrayList<>();
+
+        String whereClause = "jenis = ?";
+        String[] whereArgs = new String[]{"Movie"};
         Cursor cursor = database.query(TABLE_NAME,
                 columns,
-                null,
-                null,
+                whereClause,
+                whereArgs,
                 null,
                 null,
                 sortOrder);
@@ -142,13 +227,15 @@ public class FavHelper {
                 COLUMN_JENIS
 
         };
+        String whereClause = "jenis = ?";
+        String[] whereArgs = new String[]{"TV"};
         String sortOrder =
                 DatabaseContract.FavColumns._ID + " ASC";
         List<TvModel> favoriteList = new ArrayList<>();
         Cursor cursor = database.query(TABLE_NAME,
                 columns,
-                null,
-                null,
+                whereClause,
+                whereArgs,
                 null,
                 null,
                 sortOrder);
