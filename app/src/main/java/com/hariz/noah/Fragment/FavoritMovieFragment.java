@@ -1,4 +1,4 @@
-package com.hariz.noah;
+package com.hariz.noah.Fragment;
 
 
 import android.os.AsyncTask;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.hariz.noah.Adapter.MovieAdapter;
 import com.hariz.noah.Model.MovieModel;
 import com.hariz.noah.Network.Database.FavHelper;
+import com.hariz.noah.R;
 
 import java.util.ArrayList;
 import java.util.List;

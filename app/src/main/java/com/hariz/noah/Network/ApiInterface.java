@@ -22,4 +22,15 @@ public interface ApiInterface {
     @GET("3/tv/popular")
     Call<TvResponse> getTvMovie(@Query("api_key") String apiKey);
 
+    @Headers("Accept: application/json")
+    @GET("3/search/tv?api_key=" + BuildConfig.THE_MOVIE_API_TOKEN)
+    Call<TvResponse> getItemTvSearch(@Query("query") String movie_name);
+
+    @Headers("Accept: application/json")
+    @GET("3/discover/movie")
+    Call<MovieResponse> getReleaseToday(
+            @Query("api_key") String apiKey,
+            @Query("primary_release_date.gte") String gteDate,
+            @Query("primary_release_date.lte") String lteDate
+    );
 }

@@ -36,9 +36,6 @@ public class TvAdapter extends RecyclerView.Adapter<TvAdapter.holder> {
         list.addAll(items);
         notifyDataSetChanged();
     }
-    public List<TvModel> getListFavorite() {
-        return list;
-    }
 
     public void setListFavorite(List<TvModel> listFavorites) {
         this.list = listFavorites;

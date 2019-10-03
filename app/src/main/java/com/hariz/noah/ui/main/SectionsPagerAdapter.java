@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.hariz.noah.FavoritMovieFragment;
-import com.hariz.noah.FavoritTvFragment;
+import com.hariz.noah.Fragment.FavoritMovieFragment;
+import com.hariz.noah.Fragment.FavoritTvFragment;
 import com.hariz.noah.R;
 
 /**

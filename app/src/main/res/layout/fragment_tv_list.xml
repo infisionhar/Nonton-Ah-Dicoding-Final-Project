@@ -5,12 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.TvListFragment">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/middle_margin"
+        android:paddingTop="@dimen/middle_margin"
+        android:paddingRight="@dimen/middle_margin">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search here" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/search_tv"
+            android:id="@+id/rv_tv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_tv_list"
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
 </FrameLayout>

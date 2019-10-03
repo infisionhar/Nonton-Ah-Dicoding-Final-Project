@@ -23,4 +23,11 @@
     <string name="release_date">Release Date</string>
     <string name="appwidget_text" translatable="false">EXAMPLE</string>
     <string name="add_widget" translatable="false">Add widget</string>
+    <string name="notification" translatable="false">Reminder</string>
+    <string name="pick_date">Pick Date</string>
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="set_time">Set Time</string>
+    <string name="enable">ENABLE</string>
+    <string name="disable">DISABLE</string>
+    <string name="upcoming_reminder">Upcoming Reminder</string>
 </resources>

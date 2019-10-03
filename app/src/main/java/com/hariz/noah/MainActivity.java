@@ -2,7 +2,6 @@ package com.hariz.noah;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu1:
-                startActivity(new Intent(Settings.ACTION_LOCALE_SETTINGS));
+                startActivity(new Intent(MainActivity.this, ReminderActivity.class));
                 return true;
             case R.id.fav:
                 startActivity(new Intent(MainActivity.this, FavoritActivity.class));

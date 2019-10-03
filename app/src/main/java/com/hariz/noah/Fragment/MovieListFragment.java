@@ -43,6 +43,8 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
     LinearLayoutManager manager;
     ProgressDialog dialog;
     Unbinder unbinder;
+    //    @BindView(R.id.rv_movie_list)
+//    RecyclerView recyclerView;
     private RecyclerView recyclerView;
     private MovieAdapter adapter;
     private List<MovieModel> list;
@@ -81,7 +83,7 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
 
         searchView = (SearchView) view.findViewById(R.id.search);
         searchView.setOnQueryTextListener(this);
-
+        recyclerView = view.findViewById(R.id.rv_movie_list);
         init();
         if (savedInstanceState != null) {
             someStateValue = savedInstanceState.getInt(SOME_VALUE_KEY);
@@ -109,9 +111,7 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
     }
 
     private void init() {
-
         list = new ArrayList<>();
-        recyclerView = (RecyclerView) recyclerView.findViewById(R.id.rv_movie_list);
         manager = new LinearLayoutManager(getContext());
         adapter = new MovieAdapter(getContext(), list);
         recyclerView.setLayoutManager(manager);
@@ -124,12 +124,6 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
         dialog.setMessage("Loading....");
         dialog.setCancelable(false);
         dialog.show();
-
-//
-//        list = new ArrayList<>();
-//        recyclerView = view.findViewById(R.id.rv_movie_list);
-//        manager = new LinearLayoutManager(getContext());
-
         RetrofitHelper.getService().getItemSearch(cari_movie)
                 .enqueue(new Callback<MovieResponse>() {
                     @Override
@@ -151,7 +145,6 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
                         dialog.dismiss();
                     }
                 });
-
     }
 
 

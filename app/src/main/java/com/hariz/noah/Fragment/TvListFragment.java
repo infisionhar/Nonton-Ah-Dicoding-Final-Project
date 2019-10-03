@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TvListFragment extends Fragment {
+public class TvListFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private final String SOME_VALUE_KEY = "someValueToSave";
     private final String MOVIE_LIST_KEY = "movieListKey";
@@ -58,6 +59,7 @@ public class TvListFragment extends Fragment {
     };
 
 
+    SearchView searchView;
     public TvListFragment() {
         // Required empty public constructor
     }
@@ -76,14 +78,10 @@ public class TvListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tv_list, container, false);
         unbinder = ButterKnife.bind(this, view);
-        list = new ArrayList<>();
-
         recyclerView = view.findViewById(R.id.rv_tv_list);
-        manager = new LinearLayoutManager(getContext());
-
-        adapter = new TvAdapter(getContext(), list);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
+        searchView = view.findViewById(R.id.search_tv);
+        searchView.setOnQueryTextListener(this);
+        init();
         if (savedInstanceState != null) {
             someStateValue = savedInstanceState.getInt(SOME_VALUE_KEY);
             list = savedInstanceState.getParcelableArrayList(MOVIE_LIST_KEY);
@@ -91,9 +89,11 @@ public class TvListFragment extends Fragment {
                 adapter.setData(list);
             } else {
                 loadData();
+                init();
             }
         } else {
             loadData();
+            init();
         }
         mainViewModel = ViewModelProviders.of(this).get(TvViewModel.class);
         mainViewModel.getListMovie().observe(this, getTv);
@@ -107,6 +107,44 @@ public class TvListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    private void init() {
+        list = new ArrayList<>();
+
+        manager = new LinearLayoutManager(getContext());
+
+        adapter = new TvAdapter(getContext(), list);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void loadsearch() {
+        String cari_movie = searchView.getQuery().toString();
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage("Loading....");
+        dialog.setCancelable(false);
+        dialog.show();
+        RetrofitHelper.getService().getItemTvSearch(cari_movie)
+                .enqueue(new Callback<TvResponse>() {
+                    @Override
+                    public void onResponse(Call<TvResponse> call, Response<TvResponse> response) {
+                        if (response.body() != null) {
+                            for (TvModel r : response.body().getResults()) {
+                                list.add(r);
+                                Log.d("", "onResponse: " + r);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<TvResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Movie Tidak ada", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+    }
     private void loadData() {
         dialog = new ProgressDialog(getContext());
         dialog.setMessage("Loading....");
@@ -135,4 +173,15 @@ public class TvListFragment extends Fragment {
                 });
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        loadsearch();
+        init();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
+    }
 }

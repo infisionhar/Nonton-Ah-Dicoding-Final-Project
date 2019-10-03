@@ -31,14 +31,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.holder> {
         list.addAll(items);
         notifyDataSetChanged();
     }
-    public void replaceAll(List<MovieModel> items) {
-        list.clear();
-        list = items;
-        notifyDataSetChanged();
-    }
-    public List<MovieModel> getListFavorite() {
-        return list;
-    }
 
     public void setListFavorite(List<MovieModel> listFavorites) {
         this.list = listFavorites;

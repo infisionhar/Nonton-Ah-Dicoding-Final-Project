@@ -21,7 +21,7 @@ import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_POSTER_PATH;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_TITLE;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_USERRATING;
-import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.TABLE_NAME;
+import static com.hariz.noah.Network.Database.DatabaseContract.TABLE_NAME;
 
 public class FavHelper {
     private static final String DATABASE_TABLE = TABLE_NAME;
@@ -260,4 +260,36 @@ public class FavHelper {
         return favoriteList;
     }
 
+    public Cursor queryByIdProvider(String id) {
+        return database.query(DATABASE_TABLE, null
+                , _ID + " = ?"
+                , new String[]{id}
+                , null
+                , null
+                , null
+                , null);
+    }
+
+    public Cursor queryProvider() {
+        return database.query(DATABASE_TABLE
+                , null
+                , null
+                , null
+                , null
+                , null
+                , _ID + " DESC");
+    }
+
+    public long insertProvider(ContentValues values) {
+        return database.insert(DATABASE_TABLE, null, values);
+    }
+
+    public int updateProvider(String id, ContentValues values) {
+        return database.update(DATABASE_TABLE, values, _ID + " = ?", new String[]{id});
+    }
+
+
+    public int deleteProvider(String id) {
+        return database.delete(DATABASE_TABLE, _ID + " = ?", new String[]{id});
+    }
 }

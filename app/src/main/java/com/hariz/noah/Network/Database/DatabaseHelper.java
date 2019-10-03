@@ -12,13 +12,13 @@ import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_POSTER_PATH;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_TITLE;
 import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.COLUMN_USERRATING;
-import static com.hariz.noah.Network.Database.DatabaseContract.FavColumns.TABLE_NAME;
+import static com.hariz.noah.Network.Database.DatabaseContract.TABLE_NAME;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dbfav";
     private static final int DATABASE_VERSION = 2;
 
-    final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + DatabaseContract.FavColumns.TABLE_NAME + " (" +
+    final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
             _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
             COLUMN_MOVIEID + " INTEGER, " +
