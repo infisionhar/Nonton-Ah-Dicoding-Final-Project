@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:text="Notification Setting" />
+        android:text="@string/notification_setting" />
 
     <LinearLayout
         android:id="@+id/daily_notif"
@@ -29,7 +29,7 @@
 
             <TextView
                 android:textSize="16sp"
-                android:text="Daily Reminder Notification"
+                android:text="@string/daily_reminder_notification"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
 
@@ -37,7 +37,7 @@
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Turn on/off daily reminder" />
+                android:text="@string/turn_on_off_daily_reminder" />
         </LinearLayout>
 
         <Switch
@@ -74,13 +74,13 @@
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Upcoming Reminder Notification" />
+                android:text="@string/upcoming_reminder_notification" />
 
             <TextView
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Turn on/off upcoming reminder" />
+                android:text="@string/turn_on_off_upcoming_reminder" />
         </LinearLayout>
 
         <Switch
@@ -109,7 +109,7 @@
         android:layout_below="@id/viewupcoming"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:text="Setting" />
+        android:text="@string/setting" />
 
     <LinearLayout
 
@@ -132,13 +132,13 @@
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Setting Locale" />
+                android:text="@string/setting_locale" />
 
             <TextView
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Change your phone localization" />
+                android:text="@string/change_your_phone_localization" />
         </LinearLayout>
     </LinearLayout>
 

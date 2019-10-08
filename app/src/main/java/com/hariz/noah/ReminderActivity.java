@@ -57,7 +57,7 @@ public class ReminderActivity extends AppCompatActivity {
                     dailySwitch.setEnabled(true);
                     appPreference.setDaily(isDaily);
                     dailyReminderMovie.setRepeatingAlarm(this, DailyReminder.TYPE_REPEATING,
-                            "22:40", "a");
+                            "07:00", "Reminder Movie Today");
                 } else {
                     dailySwitch.setChecked(false);
                     appPreference.setDaily(isDaily);

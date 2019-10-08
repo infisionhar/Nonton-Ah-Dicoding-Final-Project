@@ -24,10 +24,13 @@
     <string name="appwidget_text" translatable="false">EXAMPLE</string>
     <string name="add_widget" translatable="false">Add widget</string>
     <string name="notification" translatable="false">Reminder</string>
-    <string name="pick_date">Pick Date</string>
-    <string name="daily_reminder">Daily Reminder</string>
-    <string name="set_time">Set Time</string>
-    <string name="enable">ENABLE</string>
-    <string name="disable">DISABLE</string>
     <string name="upcoming_reminder">Upcoming Reminder</string>
+    <string name="notification_setting">Notification Setting</string>
+    <string name="daily_reminder_notification">Daily Reminder Notification</string>
+    <string name="turn_on_off_daily_reminder">Turn on/off daily reminder</string>
+    <string name="upcoming_reminder_notification">Upcoming Reminder Notification</string>
+    <string name="turn_on_off_upcoming_reminder">Turn on/off upcoming reminder</string>
+    <string name="setting">Setting</string>
+    <string name="setting_locale">Setting Locale</string>
+    <string name="change_your_phone_localization">Change your phone localization</string>
 </resources>

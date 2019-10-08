@@ -15,19 +15,16 @@ import static com.hariz.noah.Network.Database.DatabaseContract.AUTHORITY;
 import static com.hariz.noah.Network.Database.DatabaseContract.CONTENT_URI;
 
 public class FavProvider extends ContentProvider {
-
-    private static final int FAVORITE = 1;
-    private static final int FAVORITE_ID = 2;
+    private static final int MOVIE = 100;
+    private static final int MOVIE_ID = 101;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-
-        sUriMatcher.addURI(AUTHORITY, DatabaseContract.TABLE_NAME, FAVORITE);
-
+        sUriMatcher.addURI(AUTHORITY, DatabaseContract.TABLE_NAME, MOVIE);
         sUriMatcher.addURI(AUTHORITY,
                 DatabaseContract.TABLE_NAME + "/#",
-                FAVORITE_ID);
+                MOVIE_ID);
     }
 
     private FavHelper favoriteHelper;
@@ -44,10 +41,10 @@ public class FavProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor cursor;
         switch (sUriMatcher.match(uri)) {
-            case FAVORITE:
+            case MOVIE:
                 cursor = favoriteHelper.queryProvider();
                 break;
-            case FAVORITE_ID:
+            case MOVIE_ID:
                 cursor = favoriteHelper.queryByIdProvider(uri.getLastPathSegment());
                 break;
             default:
@@ -74,7 +71,7 @@ public class FavProvider extends ContentProvider {
         long added;
 
         switch (sUriMatcher.match(uri)) {
-            case FAVORITE:
+            case MOVIE:
                 added = favoriteHelper.insertProvider(values);
                 break;
             default:
@@ -92,7 +89,7 @@ public class FavProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int deleted;
         switch (sUriMatcher.match(uri)) {
-            case FAVORITE_ID:
+            case MOVIE_ID:
                 deleted = favoriteHelper.deleteProvider(uri.getLastPathSegment());
                 break;
             default:
@@ -111,4 +108,6 @@ public class FavProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         return 0;
     }
+
+
 }

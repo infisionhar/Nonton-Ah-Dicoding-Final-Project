@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
@@ -21,6 +20,7 @@ import com.hariz.noah.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -33,7 +33,11 @@ public class UpCoomingReminder extends GcmTaskService {
     public static String TAG_TASK_UPCOMING = "upcoming movies";
     String CHANNEL_ID = "channel_02";
     String CHANNEL_NAME = "release_channel";
-    private Call<MovieModel> apiCall;
+    private int idNotification = 0;
+    private final List<MovieModel> stackNotif = new ArrayList<>();
+    //    private static final CharSequence CHANNEL_NAME = "dicoding channel";
+    private final static String GROUP_KEY_EMAILS = "group_key_emails";
+    private static final int MAX_NOTIFICATION = 2;
 
     @Override
     public int onRunTask(TaskParams taskParams) {
@@ -57,18 +61,12 @@ public class UpCoomingReminder extends GcmTaskService {
                         if (response.isSuccessful()) {
                             List<MovieModel> items = response.body().getResults();
                             int index = new Random().nextInt(items.size());
-
                             MovieModel item = items.get(index);
                             String title = items.get(index).getTitle();
                             String message = items.get(index).getOverview();
-                            String time = items.get(index).getReleaseDate();
-                            String poster = items.get(index).getPosterPath();
-                            int notifId = 200;
-
-                            showNotification(getApplicationContext(), title, message, notifId, item);
-
-                        } else loadFailed();
-
+                            idNotification++;
+                            showNotification(getApplicationContext(), title, message, idNotification, item);
+                        }
                     }
 
                     @Override
@@ -77,25 +75,34 @@ public class UpCoomingReminder extends GcmTaskService {
                     }
                 });
     }
-
-    private void loadFailed() {
-        Toast.makeText(this, "gagal", Toast.LENGTH_SHORT).show();
-    }
-
     private void showNotification(Context context, String title, String message, int notifId, MovieModel item) {
         NotificationManager notificationManagerCompat = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setColor(ContextCompat.getColor(context, android.R.color.transparent))
-                .setAutoCancel(true)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setSound(alarmSound);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder builder;
+        if (idNotification < MAX_NOTIFICATION) {
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setContentTitle(title)
+                    .setContentText(stackNotif.get(idNotification).getTitle())
+                    .setColor(ContextCompat.getColor(context, android.R.color.transparent))
+                    .setAutoCancel(true)
+                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                    .setSound(alarmSound);
+        } else {
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
+                    .addLine("New Email from " + stackNotif.get(idNotification).getTitle())
+                    .addLine("New Email from " + stackNotif.get(idNotification - 1).getTitle())
+                    .setBigContentTitle(idNotification + " new Movie");
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle(idNotification + " new Movie")
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setGroup(GROUP_KEY_EMAILS)
+                    .setGroupSummary(true)
+                    .setStyle(inboxStyle)
+                    .setAutoCancel(true);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);

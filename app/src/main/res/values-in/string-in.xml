@@ -8,7 +8,15 @@
     <string name="rating">Nilai</string>
     <string name="tanggal_tayang">Tanggal Tayang</string>
     <string name="detail_tv">Daftar TV</string>
-
     <string name="release_date">Tanggal Rilis</string>
     <string name="add_fav_button">Tambah Favorite</string>
+    <string name="upcoming_reminder">Pengingat yang akan datang</string>
+    <string name="notification_setting">pengaturan Pemberitahuan</string>
+    <string name="daily_reminder_notification">Pengingat Harian</string>
+    <string name="turn_on_off_daily_reminder">nyalakan/matikan pengingat harian</string>
+    <string name="upcoming_reminder_notification">Pengingat Yang akan datang</string>
+    <string name="turn_on_off_upcoming_reminder">nyalakan/matikan pengingat yang akan datang</string>
+    <string name="setting">pengaturan</string>
+    <string name="setting_locale">Pengaturan Bahasa</string>
+    <string name="change_your_phone_localization">Ubah Pengaturan bahasa telepon</string>
 </resources>

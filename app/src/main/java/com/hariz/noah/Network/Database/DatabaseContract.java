@@ -1,6 +1,5 @@
 package com.hariz.noah.Network.Database;
 
-import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -25,15 +24,4 @@ public class DatabaseContract {
             .appendPath(TABLE_NAME)
             .build();
 
-    public static String getColumnString(Cursor cursor, String columnName) {
-        return cursor.getString(cursor.getColumnIndex(columnName));
-    }
-
-    public static int getColumnInt(Cursor cursor, String columnName) {
-        return cursor.getInt(cursor.getColumnIndex(columnName));
-    }
-
-    public static long getColumnLong(Cursor cursor, String columnName) {
-        return cursor.getLong(cursor.getColumnIndex(columnName));
-    }
 }

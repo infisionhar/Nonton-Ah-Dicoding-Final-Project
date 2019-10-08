@@ -284,12 +284,9 @@ public class FavHelper {
         return database.insert(DATABASE_TABLE, null, values);
     }
 
-    public int updateProvider(String id, ContentValues values) {
-        return database.update(DATABASE_TABLE, values, _ID + " = ?", new String[]{id});
-    }
-
 
     public int deleteProvider(String id) {
-        return database.delete(DATABASE_TABLE, _ID + " = ?", new String[]{id});
+        String[] whereArgs = new String[]{String.valueOf(id)};
+        return database.delete(DATABASE_TABLE, COLUMN_MOVIEID + " = ?", whereArgs);
     }
 }

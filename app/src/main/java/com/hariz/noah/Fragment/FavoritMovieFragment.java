@@ -32,7 +32,6 @@ import static android.support.constraint.Constraints.TAG;
 public class FavoritMovieFragment extends Fragment {
 
     Unbinder unbinder;
-
     RecyclerView recyclerView;
     private List<MovieModel> list;
     private FavHelper favoriteHelper;
@@ -46,7 +45,6 @@ public class FavoritMovieFragment extends Fragment {
         FavoritMovieFragment fragment = new FavoritMovieFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -57,22 +55,12 @@ public class FavoritMovieFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorit_movie, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         recyclerView = view.findViewById(R.id.rv_movie_list_fav);
-
         return view;
     }
 
     @Override
     public void onResume() {
-//        list = new ArrayList<>();
-//        adapter = new MovieAdapter(getActivity(), list);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setAdapter(adapter);
-//        adapter.notifyDataSetChanged();
-//        favoriteHelper = new FavHelper(getActivity());
-//        favoriteHelper.open();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         favoriteHelper = new FavHelper(getActivity());
@@ -82,7 +70,7 @@ public class FavoritMovieFragment extends Fragment {
         adapter.setListFavorite(list);
         recyclerView.setAdapter(adapter);
         Log.e(TAG, "huwi " + list.size() + "");
-        new LoadDB().execute();
+        new Load().execute();
         super.onResume();
     }
 
@@ -94,7 +82,7 @@ public class FavoritMovieFragment extends Fragment {
         }
     }
 
-    private class LoadDB extends AsyncTask<Void, Void,List<MovieModel>> {
+    private class Load extends AsyncTask<Void, Void, List<MovieModel>> {
 
         @Override
         protected void onPreExecute() {

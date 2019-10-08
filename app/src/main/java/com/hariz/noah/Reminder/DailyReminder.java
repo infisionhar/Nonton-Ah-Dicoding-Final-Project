@@ -23,7 +23,6 @@ public class DailyReminder extends BroadcastReceiver {
     public static final String TYPE_REPEATING = "RepeatingAlarm";
     public static final String EXTRA_MESSAGE = "message";
     public static final String EXTRA_TYPE = "type";
-
     private final int NOTIF_ID_ONETIME = 100;
     private final int NOTIF_ID_REPEATING = 101;
     String CHANNEL_ID = "Channel_01";
@@ -44,8 +43,6 @@ public class DailyReminder extends BroadcastReceiver {
 
     private void showAlarmNotification(Context context, String title, String message, int notifId) {
         NotificationManager notificationManagerCompat = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-//        Notification notification = builder.build();
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, notifId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -70,8 +67,6 @@ public class DailyReminder extends BroadcastReceiver {
                 notificationManagerCompat.createNotificationChannel(channel);
             }
         }
-
-//        notificationManagerCompat.notify(notifId, builder.build());
         if (notificationManagerCompat != null) {
             notificationManagerCompat.notify(notifId, builder.build());
         }
