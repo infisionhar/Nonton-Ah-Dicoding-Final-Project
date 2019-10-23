@@ -15,8 +15,8 @@ import static com.hariz.noah.Network.Database.DatabaseContract.AUTHORITY;
 import static com.hariz.noah.Network.Database.DatabaseContract.CONTENT_URI;
 
 public class FavProvider extends ContentProvider {
-    private static final int MOVIE = 100;
-    private static final int MOVIE_ID = 101;
+    private static final int MOVIE = 1;
+    private static final int MOVIE_ID = 2;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -69,7 +69,6 @@ public class FavProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         long added;
-
         switch (sUriMatcher.match(uri)) {
             case MOVIE:
                 added = favoriteHelper.insertProvider(values);

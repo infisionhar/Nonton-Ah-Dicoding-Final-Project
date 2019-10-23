@@ -20,7 +20,6 @@ import com.hariz.noah.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -33,11 +32,6 @@ public class UpCoomingReminder extends GcmTaskService {
     public static String TAG_TASK_UPCOMING = "upcoming movies";
     String CHANNEL_ID = "channel_02";
     String CHANNEL_NAME = "release_channel";
-    private int idNotification = 0;
-    private final List<MovieModel> stackNotif = new ArrayList<>();
-    //    private static final CharSequence CHANNEL_NAME = "dicoding channel";
-    private final static String GROUP_KEY_EMAILS = "group_key_emails";
-    private static final int MAX_NOTIFICATION = 2;
 
     @Override
     public int onRunTask(TaskParams taskParams) {
@@ -64,9 +58,11 @@ public class UpCoomingReminder extends GcmTaskService {
                             MovieModel item = items.get(index);
                             String title = items.get(index).getTitle();
                             String message = items.get(index).getOverview();
-                            idNotification++;
-                            showNotification(getApplicationContext(), title, message, idNotification, item);
+                            int notifId = 200;
+                            showNotification(getApplicationContext(), title, message, notifId, item);
+
                         }
+
                     }
 
                     @Override
@@ -78,30 +74,14 @@ public class UpCoomingReminder extends GcmTaskService {
     private void showNotification(Context context, String title, String message, int notifId, MovieModel item) {
         NotificationManager notificationManagerCompat = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        NotificationCompat.Builder builder;
-        if (idNotification < MAX_NOTIFICATION) {
-            builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentTitle(title)
-                    .setContentText(stackNotif.get(idNotification).getTitle())
-                    .setColor(ContextCompat.getColor(context, android.R.color.transparent))
-                    .setAutoCancel(true)
-                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                    .setSound(alarmSound);
-        } else {
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
-                    .addLine("New Email from " + stackNotif.get(idNotification).getTitle())
-                    .addLine("New Email from " + stackNotif.get(idNotification - 1).getTitle())
-                    .setBigContentTitle(idNotification + " new Movie");
-            builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle(idNotification + " new Movie")
-                    .setSmallIcon(R.drawable.ic_launcher_background)
-                    .setGroup(GROUP_KEY_EMAILS)
-                    .setGroupSummary(true)
-                    .setStyle(inboxStyle)
-                    .setAutoCancel(true);
-        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_local_movies)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setColor(ContextCompat.getColor(context, android.R.color.transparent))
+                .setAutoCancel(true)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setSound(alarmSound);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     CHANNEL_NAME,

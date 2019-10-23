@@ -57,7 +57,7 @@ public class ReminderActivity extends AppCompatActivity {
                     dailySwitch.setEnabled(true);
                     appPreference.setDaily(isDaily);
                     dailyReminderMovie.setRepeatingAlarm(this, DailyReminder.TYPE_REPEATING,
-                            "07:00", "Reminder Movie Today");
+                            "12:10", "Reminder Movie Today");
                 } else {
                     dailySwitch.setChecked(false);
                     appPreference.setDaily(isDaily);
@@ -70,7 +70,6 @@ public class ReminderActivity extends AppCompatActivity {
                 if (isUpcoming) {
                     upcomingSwitch.setEnabled(true);
                     appPreference.setUpcoming(isUpcoming);
-
                     mUpComingTask.createPeriodicTask();
                     Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
                 } else {

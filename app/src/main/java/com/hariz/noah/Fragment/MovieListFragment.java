@@ -132,11 +132,12 @@ public class MovieListFragment extends Fragment implements SearchView.OnQueryTex
                             for (MovieModel r : response.body().getResults()) {
                                 list.add(r);
                                 Log.d("", "onResponse: " + r);
+                                dialog.dismiss();
                             }
                         }
                         adapter.notifyDataSetChanged();
                         Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+
                     }
 
                     @Override

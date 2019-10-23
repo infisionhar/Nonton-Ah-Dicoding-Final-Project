@@ -23,12 +23,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".SchdulerActivity"></activity>
+
         <provider
             android:name=".Provider.FavProvider"
             android:authorities="com.hariz.noah"
             android:exported="true"
             android:readPermission="com.hariz.noah.READ_DATABASE"
-            android:writePermission="com.hariz.noah.WRITE_DATABASE"></provider>
+            android:writePermission="com.hariz.noah.WRITE_DATABASE" />
 
         <activity android:name=".ReminderActivity" />
 

@@ -1,7 +1,11 @@
 package com.hariz.favmodule;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import static com.hariz.favmodule.DatabaseContract.getColumnInt;
+import static com.hariz.favmodule.DatabaseContract.getColumnString;
 
 public class FavModel implements Parcelable {
     private int id;
@@ -18,6 +22,13 @@ public class FavModel implements Parcelable {
         poster = in.readString();
     }
 
+    public FavModel(Cursor cursor) {
+        this.id = getColumnInt(cursor, DatabaseContract.FavColumns._ID);
+        this.title = getColumnString(cursor, DatabaseContract.FavColumns.COLUMN_TITLE);
+        this.overview = getColumnString(cursor, DatabaseContract.FavColumns.COLUMN_PLOT_SYNOPSIS);
+        this.release_date = getColumnString(cursor, DatabaseContract.FavColumns.COLUMN_DATE);
+        this.poster = getColumnString(cursor, DatabaseContract.FavColumns.COLUMN_POSTER_PATH);
+    }
     public static final Creator<FavModel> CREATOR = new Parcelable.Creator<FavModel>() {
         @Override
         public FavModel createFromParcel(Parcel in) {

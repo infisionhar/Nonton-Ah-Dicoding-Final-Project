@@ -43,7 +43,6 @@ public class FavHelper {
 
     public void close() {
         dataBaseHelper.close();
-
         if (database.isOpen())
             database.close();
     }
@@ -210,8 +209,6 @@ public class FavHelper {
 
             } while (cursor.moveToNext());
         }
-        cursor.close();
-        database.close();
 
         return favoriteList;
     }
@@ -268,6 +265,7 @@ public class FavHelper {
                 , null
                 , null
                 , null);
+
     }
 
     public Cursor queryProvider() {

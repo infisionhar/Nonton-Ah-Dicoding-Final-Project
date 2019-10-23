@@ -97,6 +97,12 @@ public class MovieModel implements Parcelable {
         this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
     }
 
+    public MovieModel(int idNotification, String s, String message) {
+        this.id = idNotification;
+        this.title = s;
+        this.overview = message;
+    }
+
     public String getPosterPath() {
         return posterPath;
     }
