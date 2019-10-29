@@ -4,12 +4,14 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -19,43 +21,36 @@ import com.hariz.noah.R;
 import java.util.Calendar;
 
 public class DailyReminder extends BroadcastReceiver {
-    public static final String TYPE_ONE_TIME = "OneTimeAlarm";
-    public static final String TYPE_REPEATING = "RepeatingAlarm";
-    public static final String EXTRA_MESSAGE = "message";
-    public static final String EXTRA_TYPE = "type";
-    private final int NOTIF_ID_ONETIME = 100;
-    private final int NOTIF_ID_REPEATING = 101;
-    String CHANNEL_ID = "Channel_01";
-    String CHANNEL_NAME = "daily_channel";
+    public final static int NOTIFICATION_ID = 501;
+    public static final String EXTRA_MESSAGE_PREF = "message";
+    public static final String EXTRA_TYPE_PREF = "type";
 
-    public DailyReminder() {
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onReceive(Context context, Intent intent) {
-        String type = intent.getStringExtra(EXTRA_TYPE);
-        String message = intent.getStringExtra(EXTRA_MESSAGE);
-        String title = type.equalsIgnoreCase(TYPE_ONE_TIME) ? "One Time Alarm" : "Repeating Alarm";
-        int notifId = type.equalsIgnoreCase(TYPE_ONE_TIME) ? NOTIF_ID_ONETIME : NOTIF_ID_REPEATING;
-        title = context.getResources().getString(R.string.app_name);
-        showAlarmNotification(context, title, message, notifId);
+        sendNotification(context, context.getResources().getString(R.string.app_name),
+                intent.getStringExtra(EXTRA_MESSAGE_PREF), NOTIFICATION_ID);
     }
 
-    private void showAlarmNotification(Context context, String title, String message, int notifId) {
-        NotificationManager notificationManagerCompat = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void sendNotification(Context context, String title, String desc, int id) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+        String CHANNEL_ID = "Channel_02";
+        String CHANNEL_NAME = "daily_channel";
         Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, notifId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+        PendingIntent pendingIntent = TaskStackBuilder.create(context)
+                .addNextIntent(intent)
+                .getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT);
+        Uri uriTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, desc)
+                .setSmallIcon(R.drawable.ic_local_movies)
                 .setContentTitle(title)
-                .setContentText(message)
-                .setColor(ContextCompat.getColor(context, android.R.color.transparent))
+                .setContentText(desc)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, android.R.color.transparent))
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setSound(alarmSound);
+                .setSound(uriTone);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     CHANNEL_NAME,
@@ -63,36 +58,39 @@ public class DailyReminder extends BroadcastReceiver {
             channel.enableVibration(true);
             channel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000});
             builder.setChannelId(CHANNEL_ID);
-            if (notificationManagerCompat != null) {
-                notificationManagerCompat.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
             }
         }
-        if (notificationManagerCompat != null) {
-            notificationManagerCompat.notify(notifId, builder.build());
+        if (notificationManager != null) {
+            notificationManager.notify(id, builder.build());
         }
+
     }
 
-    public void setRepeatingAlarm(Context context, String type, String time, String message) {
+    public void setAlarm(Context context, String type, String time, String message) {
+        cancelAlarm(context);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyReminder.class);
-        intent.putExtra(EXTRA_MESSAGE, message);
-        intent.putExtra(EXTRA_TYPE, type);
+        intent.putExtra(EXTRA_MESSAGE_PREF, message);
+        intent.putExtra(EXTRA_TYPE_PREF, type);
         String[] timeArray = time.split(":");
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]));
         calendar.set(Calendar.MINUTE, Integer.parseInt(timeArray[1]));
         calendar.set(Calendar.SECOND, 0);
-        if (calendar.before(Calendar.getInstance())) calendar.add(Calendar.DATE, 1);
-        int requestCode = NOTIF_ID_REPEATING;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, intent, 0);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
     }
 
-    public void cancelAlarm(Context context, String type) {
+    public void cancelAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyReminder.class);
-        int requestCode = type.equalsIgnoreCase(TYPE_ONE_TIME) ? NOTIF_ID_ONETIME : NOTIF_ID_REPEATING;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, intent, 0);
         alarmManager.cancel(pendingIntent);
+
     }
+
 }

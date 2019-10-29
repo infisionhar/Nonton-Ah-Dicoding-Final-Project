@@ -1,88 +1,133 @@
 package com.hariz.noah;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.hariz.noah.Reminder.DailyReminder;
-import com.hariz.noah.Reminder.UpCoomingTask;
+import com.hariz.noah.Reminder.UpCoomingPreference;
+import com.hariz.noah.Reminder.UpCoomingReminder;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ReminderActivity extends AppCompatActivity {
-
-    private Switch dailySwitch, upcomingSwitch;
-    private UpCoomingTask mUpComingTask;
-    private DailyReminder dailyReminderMovie;
-    private boolean isUpcoming, isDaily;
-    private Preference appPreference;
+    public static final String TYPE_REMINDER_PREF = "reminderAlarm";
+    public static final String TYPE_REMINDER_RECIEVE = "reminderAlarmRelease";
+    public static final String KEY_HEADER_UPCOMING_REMINDER = "upcomingReminder";
+    public static final String KEY_HEADER_DAILY_REMINDER = "dailyReminder";
+    public static final String KEY_FIELD_UPCOMING_REMINDER = "checkedUpcoming";
+    public static final String KEY_FIELD_DAILY_REMINDER = "checkedDaily";
+    public DailyReminder dailyReceiver;
+    public UpCoomingReminder movieReleaseReceiver;
+    public UpCoomingPreference notificationPreference;
+    public SharedPreferences sReleaseReminder, sDailyReminder;
+    public SharedPreferences.Editor editorReleaseReminder, editorDailyReminder;
+    Switch dailyReminder, releaseReminder;
+    Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
-        ButterKnife.bind(this);
-        dailySwitch = findViewById(R.id.switch_daily);
-        upcomingSwitch = findViewById(R.id.switch_upcoming);
-        dailyReminderMovie = new DailyReminder();
-        appPreference = new Preference(this);
-        setEnableDisableNotif();
+        unbinder = ButterKnife.bind(this);
+
+        sDailyReminder = getSharedPreferences(KEY_HEADER_DAILY_REMINDER, MODE_PRIVATE);
+        dailyReminder = findViewById(R.id.switch_daily);
+        boolean checkDailyReminder = sDailyReminder.getBoolean(KEY_FIELD_DAILY_REMINDER, false);
+        dailyReminder.setChecked(checkDailyReminder);
+        dailyReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editorDailyReminder = sDailyReminder.edit();
+                if (isChecked) {
+                    editorDailyReminder.putBoolean(KEY_FIELD_DAILY_REMINDER, true);
+                    editorDailyReminder.apply();
+                    dailyReminderOn();
+                } else {
+                    editorDailyReminder.putBoolean(KEY_FIELD_DAILY_REMINDER, false);
+                    editorDailyReminder.commit();
+                    dailyReminderOff();
+                }
+            }
+        });
+        sReleaseReminder = getSharedPreferences(KEY_HEADER_UPCOMING_REMINDER, MODE_PRIVATE);
+        releaseReminder = findViewById(R.id.switch_upcoming);
+        boolean checkUpcomingReminder = sReleaseReminder.getBoolean(KEY_FIELD_UPCOMING_REMINDER, false);
+        releaseReminder.setChecked(checkUpcomingReminder);
+        releaseReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editorReleaseReminder = sReleaseReminder.edit();
+                if (isChecked) {
+                    editorReleaseReminder.putBoolean(KEY_FIELD_UPCOMING_REMINDER, true);
+                    editorReleaseReminder.apply();
+                    releaseReminderOn();
+                } else {
+                    editorReleaseReminder.putBoolean(KEY_FIELD_UPCOMING_REMINDER, false);
+                    editorReleaseReminder.commit();
+                    releaseReminderOff();
+                }
+            }
+        });
+        movieReleaseReceiver = new UpCoomingReminder();
+        dailyReceiver = new DailyReminder();
+        notificationPreference = new UpCoomingPreference(this);
+        setPreference();
     }
 
-    private void setEnableDisableNotif() {
-        if (appPreference.isDaily()) {
-            dailySwitch.setChecked(true);
-        } else {
-            dailySwitch.setChecked(false);
-        }
+    private void releaseReminderOn() {
+        String time = "08:00";
+        String message = getResources().getString(R.string.app_name_);
+        notificationPreference.setReminderReleaseTime(time);
+        notificationPreference.setReminderReleaseMessage(message);
+        movieReleaseReceiver.setAlarm(ReminderActivity.this, TYPE_REMINDER_PREF, time, message);
 
-        if (appPreference.isUpcoming()) {
-            upcomingSwitch.setChecked(true);
-        } else {
-            upcomingSwitch.setChecked(false);
-        }
+        Toast.makeText(this, "Aktif", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick({R.id.switch_daily, R.id.switch_upcoming, R.id.setting_local})
+    private void releaseReminderOff() {
+        movieReleaseReceiver.cancelAlarm(ReminderActivity.this);
+
+        Toast.makeText(this, "Mati", Toast.LENGTH_SHORT).show();
+    }
+
+    private void dailyReminderOn() {
+        String time = "07:00";
+        String message = getResources().getString(R.string.app_name_);
+        notificationPreference.setReminderDailyTime(time);
+        notificationPreference.setReminderDailyMessage(message);
+        dailyReceiver.setAlarm(ReminderActivity.this, TYPE_REMINDER_RECIEVE, time, message);
+        Toast.makeText(this, "Aktif", Toast.LENGTH_SHORT).show();
+    }
+
+    private void dailyReminderOff() {
+        dailyReceiver.cancelAlarm(ReminderActivity.this);
+        Toast.makeText(this, "Mati", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @OnClick(R.id.setting_local)
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.switch_daily:
-                isDaily = dailySwitch.isChecked();
-                if (isDaily) {
-                    dailySwitch.setEnabled(true);
-                    appPreference.setDaily(isDaily);
-                    dailyReminderMovie.setRepeatingAlarm(this, DailyReminder.TYPE_REPEATING,
-                            "12:10", "Reminder Movie Today");
-                } else {
-                    dailySwitch.setChecked(false);
-                    appPreference.setDaily(isDaily);
-                    dailyReminderMovie.cancelAlarm(this, DailyReminder.TYPE_REPEATING);
-                }
-                break;
-            case R.id.switch_upcoming:
-                mUpComingTask = new UpCoomingTask(this);
-                isUpcoming = upcomingSwitch.isChecked();
-                if (isUpcoming) {
-                    upcomingSwitch.setEnabled(true);
-                    appPreference.setUpcoming(isUpcoming);
-                    mUpComingTask.createPeriodicTask();
-                    Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-                } else {
-                    upcomingSwitch.setChecked(false);
-                    appPreference.setUpcoming(isUpcoming);
-                    mUpComingTask.cancelPeriodicTask();
-                    Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.setting_local:
-                Intent mIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
-                startActivity(mIntent);
-                break;
-        }
+        Intent mIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+        startActivity(mIntent);
+    }
+
+
+    private void setPreference() {
+
+
     }
 }

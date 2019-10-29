@@ -23,7 +23,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SchdulerActivity"></activity>
 
         <provider
             android:name=".Provider.FavProvider"
@@ -38,7 +37,6 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/fav_widget_info" />
@@ -51,16 +49,11 @@
         <receiver
             android:name=".Reminder.DailyReminder"
             android:enabled="true"
-            android:exported="true" />
-
-        <service
+            android:exported="false" />
+        <receiver
             android:name=".Reminder.UpCoomingReminder"
-            android:exported="true"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
-            </intent-filter>
-        </service>
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
             android:name=".FavoritActivity"

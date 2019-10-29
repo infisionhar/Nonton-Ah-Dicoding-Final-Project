@@ -41,7 +41,6 @@
         </LinearLayout>
 
         <Switch
-            android:onClick="onClick"
             android:id="@+id/switch_daily"
             android:layout_width="55dp"
             android:layout_height="55dp"
@@ -85,11 +84,11 @@
 
         <Switch
 
-            android:onClick="onClick"
             android:id="@+id/switch_upcoming"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_alignParentRight="true"
+            android:checked="false"
             android:layout_gravity="center" />
     </LinearLayout>
 
@@ -112,9 +111,9 @@
         android:text="@string/setting" />
 
     <LinearLayout
+        android:id="@+id/setting_local"
 
         android:onClick="onClick"
-        android:id="@+id/setting_local"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvSetingTitle"
